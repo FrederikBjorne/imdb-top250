@@ -11,15 +11,19 @@ source = requests.get('http://www.imdb.com/chart/top').text
 soup = BeautifulSoup(source, 'html.parser')
 results = soup.find_all('td',attrs={'class':'titleColumn'})
 
-listy = []
-for result in results:
-    number = result.contents[0][7:-8]
-    title = result.contents[1].text
-    year = result.find('span').text[1:-1]
-    listy.append((number, title, year))
+interesting_imdb_params =
+{
+    'number' : lambda: result.contents[0][7:-8]
+    'title'  : lambda: result.contents[1].text
+    'year'   : lambda: result.find('span').text[1:-1]
+}
 
-df = pd.DataFrame(listy, columns=['number','title','year'])
-df.to_csv('movielist.csv',index=False,encoding='utf-8')
+listy = [(interesting_imdb_params['number'],
+          interesting_imdb_params['title'],
+          interesting_imdb_params['year']) for result in results]
+
+df = pd.DataFrame(listy, columns=interesting_imdb_params.keys())
+df.to_csv('movielist.csv', index=False, encoding='utf-8')
 print(df)
 print(input("Press enter to close"))
 
