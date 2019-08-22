@@ -27,15 +27,10 @@ df.to_csv('movielist.csv', index=False, encoding='utf-8')
 print(df)
 print(input("Press enter to close"))
 
-x = []
-
 with open('movielist.csv','r') as df:
     plots = csv.reader(df, delimiter=',')
-    for column in plots:
-        x.append(column[2])
+    x = [column[2] for column in plots].remove('year')
 
-
-x.remove('year')
 x2 = Counter(x)
 counted = sorted(x2.items())
 
